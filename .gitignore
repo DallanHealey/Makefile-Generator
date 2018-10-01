@@ -1,0 +1,12 @@
+*.exe
+/.idea
+Makefile
+Makefile-Generator.iml
+*.o
+*.out
+/bin/
+/bin/*.class
+*.md~
+/out/
+/src/META-INF/
+/.settings/

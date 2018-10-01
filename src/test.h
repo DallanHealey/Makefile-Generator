@@ -1,0 +1,1 @@
+#define WOOD 0
