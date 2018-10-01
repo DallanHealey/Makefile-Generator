@@ -17,7 +17,8 @@ import java.util.Set;
 public class Makefile
 {
 	// Compiler executable name
-	static final String compilerFlag = "g++";
+	static String compilerFlag = "";
+	static String fileEnding = "";
 
 	// Generate variables
 	static String root;
@@ -44,7 +45,19 @@ public class Makefile
 
 				if (args[i].equals("-g"))
 					debug = true;
-			}
+
+				if (args[i].equals("-l") || args[i].equals("--lang"))
+					if (args[++i].equals("c"))
+						compilerFlag = "gcc";
+					else
+						compilerFlag = "g++";
+
+
+				if (compilerFlag.equals("gcc"))
+					fileEnding = ".c";
+				else
+					fileEnding = ".cpp";
+				}
 		}
 
 		// Starts the search process
@@ -61,13 +74,14 @@ public class Makefile
 	 */
 	public static void findCFiles(String root) throws IOException
 	{
-		// Walks through the directory finding .cpp files
+
+		// Walks through the directory finding .c/.cpp files
 		Files.walk(Paths.get(root)).forEach(filePath ->
 			{
-				// Checks if current item is a file and has the extension .cpp
-				if (Files.isRegularFile(filePath) && filePath.toString().endsWith(".cpp"))
+				// Checks if current item is a file and has the extension .c/.cpp
+				if (Files.isRegularFile(filePath) && filePath.toString().endsWith(fileEnding))
 				{
-					// Adds .cpp file to an ArrayList for later use
+					// Adds .c/.cpp file to an ArrayList for later use
 					cFiles.add(filePath.toString());
 
 					System.out.println(filePath);
@@ -96,7 +110,7 @@ public class Makefile
 		// Turns the cpp file to an o file then adds to oFile ArrayList
 		for (String cFile : cFiles)
 		{
-			cFile = cFile.replace(".cpp", ".o");
+			cFile = cFile.replace(fileEnding, ".o");
 			oFiles.add(cFile);
 		}
 
